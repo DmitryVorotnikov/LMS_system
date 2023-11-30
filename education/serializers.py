@@ -21,4 +21,4 @@ class CourseSerializer(serializers.ModelSerializer):
 
     # Добавлено поле для количества уроков по курсу.
     def get_lessons_count(self, instance):
-        return Lesson.objects.filter(course_id=instance.id).count()
+        return Lesson.objects.filter(course=instance).count()
