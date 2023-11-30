@@ -6,3 +6,4 @@ ipython
 djangorestframework
 django-phonenumber-field
 phonenumbers
+django_filter

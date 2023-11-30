@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'users',
 
     'rest_framework',
+    'django_filters',
 
     'phonenumber_field',
 ]
@@ -137,6 +138,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# django-filter
+# REST_FRAMEWORK = {
+#     'DEFAULT_FILTER_BACKENDS': (
+#         'django_filters.rest_framework.DjangoFilterBackend',
+#     ),
+# }
 
 # User model
 AUTH_USER_MODEL = 'users.User'
