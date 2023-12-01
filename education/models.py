@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
@@ -7,6 +8,9 @@ class Course(models.Model):
     name = models.CharField(max_length=150, verbose_name='Название')
     preview = models.ImageField(upload_to='education/preview/', verbose_name='Превью', **NULLABLE)
     description = models.TextField(verbose_name='Описание', **NULLABLE)
+
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
+                                verbose_name='Создатель', **NULLABLE)
 
     def __str__(self):
         return f'{self.name}'

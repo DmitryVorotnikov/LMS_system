@@ -11,11 +11,10 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    lessons_count = serializers.IntegerField(source='lesson_set.count')
+    lessons_count = serializers.IntegerField(source='lesson_set.count', default=0, read_only=True)
     # Поле для отображения уроков в get-запрос на курсы.
     lessons = LessonSerializer(source='lesson_set', many=True, read_only=True)
 
     class Meta:
         model = Course
         fields = '__all__'
-
