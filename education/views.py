@@ -2,22 +2,28 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from education.models import Course, Lesson
+from education.permissions import CourseSetPermission
 from education.serializers import CourseSerializer, LessonSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
+    permission_classes = [CourseSetPermission]
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
 
-    # Устанавливаем разные разрешения в зависимости от метода запроса.
-    def get_permissions(self):
-        # Создавать и удалять курсы может любой авторизованный пользователь, кроме is_staff=True.
-        if self.action == 'create' or self.action == 'destroy':
-            permission_classes = [IsAuthenticated, ~IsAdminUser]
-        else:
-            permission_classes = [IsAuthenticated]
+    # Метод укажет текущего пользователя как создателя курса.
+    def perform_create(self, serializer):
+        new_course = serializer.save()
+        new_course.creator = self.request.user
+        new_course.save()
 
-        return [permission() for permission in permission_classes]
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        # Обычному пользователю показываем только созданные им курсы.
+        if not self.request.user.is_staff:
+            user_id = self.request.user.id
+            queryset = self.queryset.filter(creator=user_id)
+        return queryset
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
@@ -26,23 +32,51 @@ class LessonCreateAPIView(generics.CreateAPIView):
 
 
 class LessonListAPIView(generics.ListAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = LessonSerializer
-    queryset = Lesson.objects.all()
+
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            # Обычному пользователю показываем только созданные уроки из созданных им курсов.
+            user_id = self.request.user.id
+            return Lesson.objects.filter(course__creator=user_id)
+
+        return Lesson.objects.all()
 
 
 class LessonRetrieveAPIView(generics.RetrieveAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = LessonSerializer
-    queryset = Lesson.objects.all()
+
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            # Обычному пользователю показываем только созданные уроки из созданных им курсов.
+            user_id = self.request.user.id
+            return Lesson.objects.filter(course__creator=user_id)
+
+        return Lesson.objects.all()
 
 
 class LessonUpdateAPIView(generics.UpdateAPIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     serializer_class = LessonSerializer
-    queryset = Lesson.objects.all()
+
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            # Обычному пользователю показываем только созданные уроки из созданных им курсов.
+            user_id = self.request.user.id
+            return Lesson.objects.filter(course__creator=user_id)
+
+        return Lesson.objects.all()
 
 
 class LessonDestroyAPIView(generics.DestroyAPIView):
     permission_classes = [IsAuthenticated, ~IsAdminUser]
-    queryset = Lesson.objects.all()
+
+    def get_queryset(self):
+        if not self.request.user.is_staff:
+            # Обычному пользователю показываем только созданные уроки из созданных им курсов.
+            user_id = self.request.user.id
+            return Lesson.objects.filter(course__creator=user_id)
+
+        return Lesson.objects.all()

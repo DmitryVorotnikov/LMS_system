@@ -22,23 +22,35 @@ class UserCreateAPIView(generics.CreateAPIView):
 
 
 class UserListAPIView(generics.ListAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    # permission_classes = [IsAuthenticated]
 
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    # permission_classes = [IsAuthenticated]
 
 
 class UserUpdateAPIView(generics.UpdateAPIView):
+    permission_classes = [IsAuthenticated]
     serializer_class = UserSerializer
     queryset = User.objects.all()
-    # permission_classes = [IsAuthenticated]
+
+    # Метод для того чтобы не записывать пароль в чистом виде в БД, а сначала хешировать его.
+    def perform_update(self, serializer):
+        # Получение пароля из запроса.
+        password = self.request.data.get('password')
+
+        # Хеширование пароля, если он был изменен.
+        if password:
+            hashed_password = make_password(password)
+            serializer.save(password=hashed_password)
+        else:
+            serializer.save()
 
 
 class UserDestroyAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
     queryset = User.objects.all()
-    # permission_classes = [IsAuthenticated]
