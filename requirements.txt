@@ -7,3 +7,4 @@ djangorestframework
 django-phonenumber-field
 phonenumbers
 django_filter
+djangorestframework-simplejwt
