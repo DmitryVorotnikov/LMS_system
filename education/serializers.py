@@ -11,7 +11,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
-    lessons_count = SerializerMethodField()
+    lessons_count = serializers.IntegerField(source='lesson_set.count')
     # Поле для отображения уроков в get-запрос на курсы.
     lessons = LessonSerializer(source='lesson_set', many=True, read_only=True)
 
@@ -19,6 +19,3 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = '__all__'
 
-    # Добавлено поле для количества уроков по курсу.
-    def get_lessons_count(self, instance):
-        return Lesson.objects.filter(course=instance).count()
