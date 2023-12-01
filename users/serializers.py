@@ -11,3 +11,16 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
+
+class UserForAdminSerializer(serializers.ModelSerializer):
+    payments = PaymentSerializer(source='payment_set', many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
+class UserForUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('first_name', 'email', 'phone_number', 'city', 'avatar',)
