@@ -1,9 +1,9 @@
 from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
-from education.models import Course, Lesson
+from education.models import Course, Lesson, Subscription
 from education.permissions import CourseSetPermission
-from education.serializers import CourseSerializer, LessonSerializer
+from education.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -19,7 +19,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        # Обычному пользователю показываем только созданные им курсы.
+        # Обычному пользователю в queryset указываем его курсы.
         if not self.request.user.is_staff:
             user_id = self.request.user.id
             queryset = self.queryset.filter(creator=user_id)
@@ -37,7 +37,7 @@ class LessonListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            # Обычному пользователю показываем только уроки из созданных им курсов.
+            # Обычному пользователю в queryset указываем только уроки из созданных им курсов.
             user_id = self.request.user.id
             return Lesson.objects.filter(course__creator=user_id)
 
@@ -50,7 +50,7 @@ class LessonRetrieveAPIView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            # Обычному пользователю показываем только уроки из созданных им курсов.
+            # Обычному пользователю в queryset указываем только уроки из созданных им курсов.
             user_id = self.request.user.id
             return Lesson.objects.filter(course__creator=user_id)
 
@@ -63,7 +63,7 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            # Обычному пользователю показываем только уроки из созданных им курсов.
+            # Обычному пользователю в queryset указываем только уроки из созданных им курсов.
             user_id = self.request.user.id
             return Lesson.objects.filter(course__creator=user_id)
 
@@ -75,8 +75,28 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            # Обычному пользователю показываем только уроки из созданных им курсов.
+            # Обычному пользователю в queryset указываем только уроки из созданных им курсов.
             user_id = self.request.user.id
             return Lesson.objects.filter(course__creator=user_id)
 
         return Lesson.objects.all()
+
+
+class SubscriptionCreateAPIView(generics.CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = SubscriptionSerializer
+
+
+class SubscriptionListAPIView(generics.ListAPIView):  # Надо удалить потом !!!!!!!!!!!!!!!!!!!
+    permission_classes = [IsAuthenticated]
+    serializer_class = SubscriptionSerializer
+    queryset = Subscription.objects.all()
+
+
+class SubscriptionDestroyAPIView(generics.DestroyAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        # В queryset указываем только подписки текущего пользователя.
+        user_id = self.request.user.id
+        return Subscription.objects.filter(user=user_id)
