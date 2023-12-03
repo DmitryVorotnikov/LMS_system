@@ -140,7 +140,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# django-filter
+# Django REST framework
 REST_FRAMEWORK = {
     'DATETIME_FORMAT': '%Y-%m-%d %H:%M:%S',
     'DATE_FORMAT': '%Y-%m-%d',
@@ -152,7 +152,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ),
     'SIMPLE_JWT': {
-        "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+        "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     },
 }

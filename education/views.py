@@ -37,7 +37,7 @@ class LessonListAPIView(generics.ListAPIView):
 
     def get_queryset(self):
         if not self.request.user.is_staff:
-            # Обычному пользователю показываем только созданные уроки из созданных им курсов.
+            # Обычному пользователю показываем только уроки из созданных им курсов.
             user_id = self.request.user.id
             return Lesson.objects.filter(course__creator=user_id)
 
