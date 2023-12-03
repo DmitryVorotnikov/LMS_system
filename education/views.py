@@ -1,5 +1,8 @@
-from rest_framework import viewsets, generics
+from django.shortcuts import get_object_or_404
+from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from education.models import Course, Lesson, Subscription
 from education.paginators import CoursePaginator, LessonPaginator
@@ -73,7 +76,7 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
         return Lesson.objects.all()
 
 
-class LessonDestroyAPIView(generics.DestroyAPIView):
+class LessonDestroyAPIView(APIView):
     permission_classes = [IsAuthenticated, ~IsAdminUser]
 
     def get_queryset(self):
@@ -84,16 +87,15 @@ class LessonDestroyAPIView(generics.DestroyAPIView):
 
         return Lesson.objects.all()
 
+    def delete(self, request, pk):
+        lesson = get_object_or_404(Lesson, pk=pk)
+        lesson.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class SubscriptionCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = SubscriptionSerializer
-
-
-class SubscriptionListAPIView(generics.ListAPIView):  # Надо удалить потом !!!!!!!!!!!!!!!!!!!
-    permission_classes = [IsAuthenticated]
-    serializer_class = SubscriptionSerializer
-    queryset = Subscription.objects.all()
 
 
 class SubscriptionDestroyAPIView(generics.DestroyAPIView):
