@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from users.models import User
+
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -34,4 +36,18 @@ class Lesson(models.Model):
     class Meta:
         verbose_name = 'Урок'
         verbose_name_plural = 'Уроки'
+        ordering = ('id',)
+
+
+class Subscription(models.Model):
+    course = models.ForeignKey('Course', on_delete=models.CASCADE, verbose_name='Курс')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Пользователь')
+    subscription_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата подписки')
+
+    def __str__(self):
+        return f'Подписка пользователя {self.user}'
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
         ordering = ('id',)
