@@ -2,6 +2,7 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from education.models import Course, Lesson, Subscription
+from education.paginators import CoursePaginator, LessonPaginator
 from education.permissions import CourseSetPermission
 from education.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
 
@@ -9,6 +10,7 @@ from education.serializers import CourseSerializer, LessonSerializer, Subscripti
 class CourseViewSet(viewsets.ModelViewSet):
     permission_classes = [CourseSetPermission]
     serializer_class = CourseSerializer
+    pagination_class = CoursePaginator
     queryset = Course.objects.all()
 
     # Метод укажет текущего пользователя как создателя курса.
@@ -34,6 +36,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
 class LessonListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = LessonSerializer
+    pagination_class = LessonPaginator
 
     def get_queryset(self):
         if not self.request.user.is_staff:
