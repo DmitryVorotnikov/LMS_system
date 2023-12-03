@@ -150,11 +150,13 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
-    ),
-    'SIMPLE_JWT': {
-        "ACCESS_TOKEN_LIFETIME": timedelta(minutes=20),
-        "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
-    },
+    )
+}
+
+# djangorestframework-simplejwt
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1)
 }
 
 # User model
