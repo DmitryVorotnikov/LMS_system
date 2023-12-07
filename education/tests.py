@@ -2,6 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 
+from education.models import Lesson, Course
 from users.models import User
 
 
@@ -285,7 +286,7 @@ class SubscriptionStatusCodeTestCase(APITestCase):
             'course': course_id
         }
 
-    def test_lesson_create(self):
+    def test_subscription_create(self):
         """
         Тестирование статуса кода при создании подписки.
         """
@@ -299,11 +300,12 @@ class SubscriptionStatusCodeTestCase(APITestCase):
             status.HTTP_201_CREATED
         )
 
-    def test_lesson_delete(self):
+    def test_subscription_delete(self):
         """
         Тестирование статуса кода при удалении подписки.
         """
-        subscription_id = MyTestHelper.create_new_obj_and_get_pk(self.client, self.url_create, self.data_for_subscription)
+        subscription_id = MyTestHelper.create_new_obj_and_get_pk(self.client, self.url_create,
+                                                                 self.data_for_subscription)
 
         detail_url = reverse('education:subs_delete', kwargs={'pk': subscription_id})
         response = self.client.delete(detail_url)
@@ -311,4 +313,66 @@ class SubscriptionStatusCodeTestCase(APITestCase):
         self.assertEquals(
             response.status_code,
             status.HTTP_204_NO_CONTENT
+        )
+
+
+class LessonListTestCase(APITestCase):
+    """
+    Тест просмотра списка Уроков.
+    """
+
+    def setUp(self) -> None:
+        # Создаем пользователя.
+        self.user = MyTestHelper.create_user()
+        # Проходим аутентификацию пользователем.
+        self.client = MyTestHelper.create_auth_client(self.user)
+
+        # Сохраняем данные для курса.
+        self.url_for_course = reverse('education:courses-list')
+        self.data_for_course = {
+            'name': 'Course test data',
+        }
+
+        # Создаем курс и получаем id курса.
+        course_id = MyTestHelper.create_new_obj_and_get_pk(client=self.client, url=self.url_for_course,
+                                                           data=self.data_for_course)
+
+        # Сохраняем данные для урока.
+        # self.url_for_lesson_list = reverse('education:lessons_list')
+        self.data_for_lesson = {
+            'course': course_id,
+            'name': 'Lesson test data',
+        }
+
+        # Создаем Урок.
+        self.lesson = Lesson.objects.create(
+            course=Course.objects.get(pk=course_id),
+            name=self.data_for_lesson.get('name')
+        )
+
+    def test_lesson_list(self):
+        """
+        Тестирование просмотра списка уроков.
+        """
+        response = self.client.get(
+            '/lessons/',  # Или self.url_for_lesson_list
+        )
+
+        self.assertEquals(
+            response.json(),
+            {
+                "count": 1,
+                "next": None,
+                "previous": None,
+                "results": [
+                    {
+                        "id": self.lesson.id,
+                        "link_to_video": None,
+                        "name": self.lesson.name,
+                        "description": None,
+                        "preview": None,
+                        "course": self.lesson.course_id
+                    }
+                ]
+            }
         )
