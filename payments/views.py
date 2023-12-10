@@ -4,7 +4,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 
 from payments.models import Payment
-from payments.serializers import PaymentSerializer, PaymentRetrieveSerializer
+from payments.serializers import PaymentSerializer, PaymentListRetrieveSerializer
 from payments.services import get_link_for_payment
 
 
@@ -32,7 +32,7 @@ class PaymentCreateAPIView(generics.CreateAPIView):
 
 class PaymentListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = PaymentRetrieveSerializer
+    serializer_class = PaymentListRetrieveSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter]
     ordering_fields = ['date_of_payment']
     filterset_fields = ('paid_course', 'payment_type',)
@@ -48,7 +48,7 @@ class PaymentListAPIView(generics.ListAPIView):
 
 class PaymentRetrieveAPIView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
-    serializer_class = PaymentRetrieveSerializer
+    serializer_class = PaymentListRetrieveSerializer
     queryset = Payment.objects.all()
 
 
