@@ -32,7 +32,6 @@ class PaymentListRetrieveSerializer(serializers.ModelSerializer):
         # Проверяем статус платежа с помощью id сессии.
         if instance.link_for_payment:
             payment_status = check_payment_status(payment_session_id=instance.payment_session_id)
-            print(payment_status)
             if payment_status != 'open':
                 return f'Оплачено'
             else:
