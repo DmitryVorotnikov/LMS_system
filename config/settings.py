@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'django_filters',
+    'corsheaders',
 
     'phonenumber_field',
 ]
@@ -58,6 +59,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -166,15 +168,28 @@ SIMPLE_JWT = {
 AUTH_USER_MODEL = 'users.User'
 
 # Swagger
-SWAGGER_SETTINGS = {
+SWAGGER_SETTINGS = {  # Для авторизации по токену.
     'SECURITY_DEFINITIONS': {
         'Bearer': {
             'type': 'apiKey',
             'name': 'Authorization',
             'in': 'header'
         },
-        'basic': {
+        'basic': {  # Для авторизации username(email)/password.
             'type': 'basic'
         }
     }
 }
+
+# CORS
+CORS_ALLOWED_ORIGINS = [ # Список источников с которых разрешено делать safe-запросы (без CSRF-токена).
+    'https://localhost:8000',
+    'https://127.0.0.1:8000',
+]
+
+CSRF_TRUSTED_ORIGINS = [ # Список доверенных источников с которых допускаются запросы с CSRF-токенами.
+    'https://localhost:8000',
+    'https://127.0.0.1:8000',
+]
+
+CORS_ALLOW_ALL_ORIGINS = False  # Разрешает абсолютно всем источникам отправлять запросы.
