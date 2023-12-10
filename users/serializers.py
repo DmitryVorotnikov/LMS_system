@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = '__all__'
+        fields = ('password', 'first_name', 'last_name', 'email', 'phone_number', 'city', 'avatar', 'payments',)
 
 
 class UserForAdminSerializer(serializers.ModelSerializer):

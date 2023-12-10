@@ -9,3 +9,4 @@ phonenumbers
 django_filter
 djangorestframework-simplejwt
 coverage
+drf-yasg

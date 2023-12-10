@@ -41,12 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Apps
     'education',
     'payments',
 
+    # Users
     'users',
 
     'rest_framework',
+    'drf_yasg',
     'django_filters',
 
     'phonenumber_field',
@@ -161,3 +164,17 @@ SIMPLE_JWT = {
 
 # User model
 AUTH_USER_MODEL = 'users.User'
+
+# Swagger
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        },
+        'basic': {
+            'type': 'basic'
+        }
+    }
+}

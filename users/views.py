@@ -8,7 +8,6 @@ from users.serializers import UserSerializer, UserForAdminSerializer, UserForUse
 
 
 class UserCreateAPIView(generics.CreateAPIView):
-    serializer_class = UserSerializer
 
     # Метод для того чтобы не записывать пароль в чистом виде в БД, а сначала хешировать его.
     def perform_create(self, serializer):
@@ -20,6 +19,14 @@ class UserCreateAPIView(generics.CreateAPIView):
 
         # Установка хешированного пароля в сериализатор перед сохранением в БД.
         serializer.save(password=hashed_password)
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            # Если is_staff=True, то можно создать любого пользователя.
+            return UserForAdminSerializer
+        else:
+            # Если is_staff=False, то можно создать только обычного пользователя.
+            return UserSerializer
 
 
 class UserListAPIView(generics.ListAPIView):
@@ -64,6 +71,14 @@ class UserUpdateAPIView(generics.UpdateAPIView):
             serializer.save(password=hashed_password)
         else:
             serializer.save()
+
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            # Если is_staff=True, то можно редактировать все поля.
+            return UserForAdminSerializer
+        else:
+            # Если is_staff=False, то редактировать только поля для пользователей.
+            return UserSerializer
 
 
 class UserDestroyAPIView(generics.DestroyAPIView):
