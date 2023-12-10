@@ -182,14 +182,17 @@ SWAGGER_SETTINGS = {  # Для авторизации по токену.
 }
 
 # CORS
-CORS_ALLOWED_ORIGINS = [ # Список источников с которых разрешено делать safe-запросы (без CSRF-токена).
+CORS_ALLOWED_ORIGINS = [  # Список источников с которых разрешено делать safe-запросы (без CSRF-токена).
     'https://localhost:8000',
     'https://127.0.0.1:8000',
 ]
 
-CSRF_TRUSTED_ORIGINS = [ # Список доверенных источников с которых допускаются запросы с CSRF-токенами.
+CSRF_TRUSTED_ORIGINS = [  # Список доверенных источников с которых допускаются запросы с CSRF-токенами.
     'https://localhost:8000',
     'https://127.0.0.1:8000',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = False  # Разрешает абсолютно всем источникам отправлять запросы.
+
+# Stripe
+STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
