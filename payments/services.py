@@ -2,9 +2,6 @@ import stripe
 from django.conf import settings
 
 
-# Потом удалю, это для проверяющего
-# sk_test_51OLqKkASwLHByYrPWC8v5hJYJ8FZbmUWYOFKh3jdhdgDB8YTaf8P9I60FGCyEIuurenvY16yZbsXlak2CoFxOwk600SJhjsHEU
-
 def get_link_for_payment(paid_course, payment_amount):
     stripe.api_key = settings.STRIPE_API_KEY
 
