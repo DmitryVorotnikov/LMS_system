@@ -52,12 +52,12 @@ class PaymentRetrieveAPIView(generics.RetrieveAPIView):
     queryset = Payment.objects.all()
 
 
-class PaymentUpdateAPIView(generics.UpdateAPIView):
-    permission_classes = [IsAuthenticated]
-    serializer_class = PaymentSerializer
-    queryset = Payment.objects.all()
-
-
-class PaymentDestroyAPIView(generics.DestroyAPIView):
-    permission_classes = [IsAuthenticated]
-    queryset = Payment.objects.all()
+# class PaymentUpdateAPIView(generics.UpdateAPIView):
+#     permission_classes = [IsAuthenticated]
+#     serializer_class = PaymentSerializer
+#     queryset = Payment.objects.all()
+#
+#
+# class PaymentDestroyAPIView(generics.DestroyAPIView):
+#     permission_classes = [IsAuthenticated]
+#     queryset = Payment.objects.all()
