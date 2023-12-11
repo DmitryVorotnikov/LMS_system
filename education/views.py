@@ -1,4 +1,6 @@
 from django.shortcuts import get_object_or_404
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, generics, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -32,6 +34,89 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
+
+    @swagger_auto_schema(
+        operation_description="Описание представления, аналогичное обычному докстрингу представления.",
+        request_body=openapi.Schema(  # Описание request.
+            type=openapi.TYPE_OBJECT,
+            properties={  # Описание полей.
+                'course': openapi.Schema(
+                    type=openapi.TYPE_INTEGER,
+                    description='ID курса'
+                ),
+                'name': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description='Название урока',
+                    maxLength=150,
+                    minLength=1
+                ),
+                'description': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    description='Описание урока',
+                    nullable=True
+                ),
+                'preview': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_BINARY,
+                    description='Превью изображение',
+                    nullable=True
+                ),
+                'link_to_video': openapi.Schema(
+                    type=openapi.TYPE_STRING,
+                    format=openapi.FORMAT_URI,
+                    description='Ссылка на видео',
+                    nullable=True
+                ),
+            },
+            required=['course', 'name'],  # Указываем обязательные поля.
+            title='Lesson',  # Указываем заголовок, можно указать название модели.
+        ),
+        responses={  # Описание ожидаемого responses.
+            201: openapi.Schema(  # Ожидаем статус-код 201.
+                type=openapi.TYPE_OBJECT,
+                properties={  # Описание полей.
+                    'id': openapi.Schema(
+                        type=openapi.TYPE_INTEGER,
+                        description='ID урока',
+                        read_only=True
+                    ),
+                    'course': openapi.Schema(
+                        type=openapi.TYPE_INTEGER,
+                        description='ID курса'
+                    ),
+                    'name': openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        description='Название урока',
+                        maxLength=150,
+                        minLength=1
+                    ),
+                    'description': openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        description='Описание урока',
+                        nullable=True
+                    ),
+                    'preview': openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        format=openapi.FORMAT_BINARY,
+                        description='Превью изображение',
+                        nullable=True
+                    ),
+                    'link_to_video': openapi.Schema(
+                        type=openapi.TYPE_STRING,
+                        format=openapi.FORMAT_URI,
+                        description='Ссылка на видео',
+                        nullable=True
+                    ),
+                },
+                title='Lesson',  # Указываем заголовок, можно указать название модели.
+            ),
+        },
+    )
+    # КОД РУЧНОГО ДОКУМЕНТИРОВАНИЯ МОЖНО ВЫНЕСТИ В ОТДЕЛЬНЫЙ ФАЙЛ!
+    # @swagger_auto_schema(**lesson_create_schema())
+    def post(self, request, *args, **kwargs):  # Указываем тип запроса (для ручного документирования).
+        return super().post(request, *args, **kwargs)
+
     permission_classes = [IsAuthenticated, ~IsAdminUser]
     serializer_class = LessonSerializer
 
