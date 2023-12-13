@@ -38,11 +38,10 @@ class PaymentListAPIView(generics.ListAPIView):
     filterset_fields = ('paid_course', 'payment_type',)
 
     def get_queryset(self):
-        queryset = Payment.objects.all()
         # Обычному пользователю в queryset указываем его платежи.
         if not self.request.user.is_staff:
             user_id = self.request.user.id
-            queryset = queryset.filter(creator=user_id)
+            queryset = Payment.objects.filter(creator=user_id)
         return queryset
 
 

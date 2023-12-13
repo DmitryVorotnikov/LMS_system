@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import viewsets, generics, status
@@ -10,6 +11,7 @@ from education.models import Course, Lesson, Subscription
 from education.paginators import CoursePaginator, LessonPaginator
 from education.permissions import CourseSetPermission
 from education.serializers import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from education.tasks import task_check_is_update
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -120,6 +122,21 @@ class LessonCreateAPIView(generics.CreateAPIView):
     permission_classes = [IsAuthenticated, ~IsAdminUser]
     serializer_class = LessonSerializer
 
+    def perform_create(self, serializer):
+        new_lesson = serializer.save()
+
+        # Получаем Курс, на который ссылается текущий урок.
+        course = new_lesson.course
+
+        # Вызываем асинхронную задачу.
+        task_check_is_update.delay(course.id)
+
+        # Обновляем поле is_update у Курса.
+        course.is_update = timezone.now()
+
+        # Сохраняем данные по Курсу.
+        course.save()
+
 
 class LessonListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -159,6 +176,14 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
             return Lesson.objects.filter(course__creator=user_id)
 
         return Lesson.objects.all()
+
+    def perform_update(self, serializer):
+        lesson = serializer.save()
+
+        # Вызываем асинхронную задачу.
+        task_check_is_update.delay(lesson.course_id)
+
+        serializer.save()
 
 
 class LessonDestroyAPIView(APIView):
