@@ -14,6 +14,8 @@ class Course(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT,
                                 verbose_name='Создатель', **NULLABLE)
 
+    is_update = models.DateTimeField(verbose_name='Дата/время последнего обновления', **NULLABLE)
+
     def __str__(self):
         return f'{self.name}'
 
