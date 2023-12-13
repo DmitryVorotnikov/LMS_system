@@ -19,6 +19,6 @@ class PaymentAdmin(admin.ModelAdmin):
 
 @admin.register(Subscription)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('course', 'user', 'payment_amount', 'subscription_date',)
+    list_display = ('course', 'user', 'subscription_date',)
     list_filter = ('course', 'user',)
     search_fields = ('course',)
