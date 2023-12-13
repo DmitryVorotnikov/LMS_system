@@ -198,7 +198,7 @@ CORS_ALLOW_ALL_ORIGINS = False  # Разрешает абсолютно всем
 # Stripe
 STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
 
-# Celery
+# Celery and Celery-Beat
 CELERY_BROKER_URL = 'redis://localhost:6379'
 CELERY_RESULT_BACKEND = 'redis://localhost:6379'  # URL-адрес брокера результатов.
 
@@ -207,3 +207,18 @@ CELERY_TIMEZONE = os.getenv('CELERY_TIMEZONE')
 CELERY_TASK_TRACK_STARTED = True  # Флаг отслеживания выполнения задач.
 
 CELERY_TASK_TIME_LIMIT = 30 * 60  # Максимальное время на выполнение задачи (в секундах) (30 минут).
+
+CELERY_BEAT_SCHEDULE = {
+    'task-name': {
+        'task': 'education.tasks.task_monthly_user_blocking',  # Путь к задаче
+        'schedule': timedelta(days=10),  # Расписание выполнения задачи.
+    },
+}
+
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
