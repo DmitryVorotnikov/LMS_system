@@ -12,3 +12,6 @@ coverage
 drf-yasg
 requests
 stripe
+redis
+celery
+django-celery-beat

@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_filters',
     'corsheaders',
+    'django_celery_beat',
 
     'phonenumber_field',
 ]
@@ -196,3 +197,13 @@ CORS_ALLOW_ALL_ORIGINS = False  # Разрешает абсолютно всем
 
 # Stripe
 STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
+
+# Celery
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'  # URL-адрес брокера результатов.
+
+CELERY_TIMEZONE = os.getenv('CELERY_TIMEZONE')
+
+CELERY_TASK_TRACK_STARTED = True  # Флаг отслеживания выполнения задач.
+
+CELERY_TASK_TIME_LIMIT = 30 * 60  # Максимальное время на выполнение задачи (в секундах) (30 минут).
