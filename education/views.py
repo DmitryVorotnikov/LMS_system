@@ -183,8 +183,6 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
         # Вызываем асинхронную задачу.
         task_check_is_update.delay(lesson.course_id)
 
-        serializer.save()
-
 
 class LessonDestroyAPIView(APIView):
     permission_classes = [IsAuthenticated, ~IsAdminUser]
