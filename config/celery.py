@@ -5,7 +5,7 @@ from celery import Celery
 # Устанавливаем модуль настроек Django по умолчанию для программы 'celery'.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 
-app = Celery('LMS_system')
+app = Celery('LMS_system')  # Название проекта
 
 # Использование строки здесь означает, что рабочему не нужно сериализовать
 # объект конфигурации для дочерних процессов.
