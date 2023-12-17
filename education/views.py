@@ -20,10 +20,6 @@ class CourseViewSet(viewsets.ModelViewSet):
     pagination_class = CoursePaginator
     queryset = Course.objects.all()
 
-    # Метод укажет текущего пользователя как создателя курса.
-    def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
-
     def get_queryset(self):
         queryset = super().get_queryset()
         # Обычному пользователю в queryset указываем его курсы.
@@ -31,6 +27,10 @@ class CourseViewSet(viewsets.ModelViewSet):
             user_id = self.request.user.id
             queryset = self.queryset.filter(creator=user_id)
         return queryset
+
+    # Метод укажет текущего пользователя как создателя курса.
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
 
 
 class LessonCreateAPIView(generics.CreateAPIView):
