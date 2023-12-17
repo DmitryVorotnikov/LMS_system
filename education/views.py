@@ -22,9 +22,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     # Метод укажет текущего пользователя как создателя курса.
     def perform_create(self, serializer):
-        new_course = serializer.save()
-        new_course.creator = self.request.user
-        new_course.save()
+        serializer.save(creator=self.request.user)
 
     def get_queryset(self):
         queryset = super().get_queryset()
