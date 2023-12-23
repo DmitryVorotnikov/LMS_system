@@ -12,9 +12,8 @@ class UserCreateAPIView(generics.CreateAPIView):
         if self.request.user.is_staff:
             # Если is_staff=True, то можно создать любого пользователя.
             return UserForAdminSerializer
-        else:
-            # Если is_staff=False, то можно создать только обычного пользователя.
-            return UserSerializer
+
+        return UserSerializer
 
 
 class UserListAPIView(generics.ListAPIView):
@@ -25,9 +24,9 @@ class UserListAPIView(generics.ListAPIView):
         if self.request.user.is_staff:
             # Если is_staff=True, то показываем информацию подробно.
             return UserForAdminSerializer
-        else:
-            # Если обычный пользователь, то показываем информацию кратко.
-            return UserForUserSerializer
+
+        # Если обычный пользователь, то показываем информацию кратко.
+        return UserForUserSerializer
 
 
 class UserRetrieveAPIView(generics.RetrieveAPIView):
@@ -38,9 +37,9 @@ class UserRetrieveAPIView(generics.RetrieveAPIView):
         if self.request.user.is_staff:
             # Если is_staff=True, то показываем информацию подробно.
             return UserForAdminSerializer
-        else:
-            # Если обычный пользователь, то показываем информацию кратко.
-            return UserForUserSerializer
+
+        # Если обычный пользователь, то показываем информацию кратко.
+        return UserForUserSerializer
 
 
 class UserUpdateAPIView(generics.UpdateAPIView):
@@ -52,9 +51,8 @@ class UserUpdateAPIView(generics.UpdateAPIView):
         if self.request.user.is_staff:
             # Если is_staff=True, то можно редактировать все поля.
             return UserForAdminSerializer
-        else:
-            # Если is_staff=False, то редактировать только поля для пользователей.
-            return UserSerializer
+
+        return UserSerializer
 
 
 class UserDestroyAPIView(generics.DestroyAPIView):

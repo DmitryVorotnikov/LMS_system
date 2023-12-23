@@ -121,6 +121,7 @@ class LessonCreateAPIView(generics.CreateAPIView):
     serializer_class = LessonSerializer
 
     def perform_create(self, serializer):
+        # Наверное это можно было в сериализаторе сделать.
         new_lesson = serializer.save()
 
         # Получаем Курс, на который ссылается текущий урок.
@@ -176,6 +177,7 @@ class LessonUpdateAPIView(generics.UpdateAPIView):
         return Lesson.objects.all()
 
     def perform_update(self, serializer):
+        # Наверное это можно было в сериализаторе сделать.
         lesson = serializer.save()
 
         # Вызываем асинхронную задачу.

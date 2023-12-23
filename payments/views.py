@@ -13,6 +13,7 @@ class PaymentCreateAPIView(generics.CreateAPIView):
     serializer_class = PaymentSerializer
 
     def perform_create(self, serializer):
+        # Это можно было в сериализаторе сделать.
         new_payment = serializer.save()
 
         # Присваиваем текущего пользователя как создателя платежа.
