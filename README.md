@@ -35,6 +35,11 @@ The application allows:
 
 - Documentation for available endpoints will be accessible through Swagger after project launch.
 
+## Project launch:
+
+1) Create a .env file in the project root following the example of the .env.sample file.
+2) Enter docker compose up --build in the console.
+
 
 
 # LMS-system (RUS)
@@ -74,3 +79,7 @@ The application allows:
 - Учиться и проходить обучение по созданным курсам
 
 - Документация по доступным эндпоинтам будет доступна через Swagger после запуска проекта.
+
+## Запуск проекта:
+1) В корне проекта создайте файл .env по образцу файла .env.sample.
+2) Введите в консоль docker compose up --build.
