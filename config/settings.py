@@ -96,6 +96,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DATABASES_NAME'),
         'USER': os.getenv('DATABASES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': 'postgresql_db',  # Название сервиса в docker-compose.yaml
+        'PORT': '',  # По умолчанию используется порт 5432
     }
 }
 
@@ -199,8 +202,8 @@ CORS_ALLOW_ALL_ORIGINS = False  # Разрешает абсолютно всем
 STRIPE_API_KEY = os.getenv('STRIPE_API_KEY')
 
 # Celery and Celery-Beat
-CELERY_BROKER_URL = 'redis://localhost:6379'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379'  # URL-адрес брокера результатов.
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'  # URL-адрес брокера результатов.
 
 CELERY_TIMEZONE = os.getenv('CELERY_TIMEZONE')
 
